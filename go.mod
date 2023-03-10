@@ -1,11 +1,10 @@
-module github.com/lonemage/xtime
+module github.com/lonemage/time
 
 go 1.18
 
 require (
 	github.com/cenkalti/backoff/v4 v4.2.0
 	github.com/smartystreets/goconvey v1.7.2
-	google.golang.org/grpc v1.53.0
 )
 
 require (

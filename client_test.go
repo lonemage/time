@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	time "github.com/lonemage/xtime"
+	"github.com/lonemage/time"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
