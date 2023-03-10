@@ -2,7 +2,11 @@ module github.com/lonemage/xtime
 
 go 1.18
 
-require github.com/smartystreets/goconvey v1.7.2
+require (
+	github.com/cenkalti/backoff/v4 v4.2.0
+	github.com/smartystreets/goconvey v1.7.2
+	google.golang.org/grpc v1.53.0
+)
 
 require (
 	github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1 // indirect

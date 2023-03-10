@@ -1,98 +1,50 @@
-package xtime
+package time
 
 import (
-	"sync"
 	"time"
 )
 
-type xTime struct {
-	mtx sync.RWMutex
+type (
+	Time     = time.Time
+	Duration = time.Duration
+	Location = time.Location
+)
 
-	opts *Options
+var (
+	LoadLocation    = time.LoadLocation
+	Date            = time.Date
+	ParseInLocation = time.ParseInLocation
+	Unix            = time.Unix
 
-	c Client
+	Local = time.Local
+	UTC   = time.UTC
+)
 
-	off time.Duration
+const (
+	Layout      = time.Layout      // "01/02 03:04:05PM '06 -0700" // The reference time, in numerical order.
+	ANSIC       = time.ANSIC       //  "Mon Jan _2 15:04:05 2006"
+	UnixDate    = time.UnixDate    //  "Mon Jan _2 15:04:05 MST 2006"
+	RubyDate    = time.RubyDate    //  "Mon Jan 02 15:04:05 -0700 2006"
+	RFC822      = time.RFC822      //  "02 Jan 06 15:04 MST"
+	RFC822Z     = time.RFC822Z     // "02 Jan 06 15:04 -0700" // RFC822 with numeric zone
+	RFC850      = time.RFC850      // "Monday, 02-Jan-06 15:04:05 MST"
+	RFC1123     = time.RFC1123     // "Mon, 02 Jan 2006 15:04:05 MST"
+	RFC1123Z    = time.RFC1123Z    //  "Mon, 02 Jan 2006 15:04:05 -0700" // RFC1123 with numeric zone
+	RFC3339     = time.RFC3339     //  "2006-01-02T15:04:05Z07:00"
+	RFC3339Nano = time.RFC3339Nano // "2006-01-02T15:04:05.999999999Z07:00"
+	Kitchen     = time.Kitchen     //  "3:04PM"
+	// Handy time stamps.
+	Stamp      = time.Stamp      // "Jan _2 15:04:05"
+	StampMilli = time.StampMilli // "Jan _2 15:04:05.000"
+	StampMicro = time.StampMicro //  "Jan _2 15:04:05.000000"
+	StampNano  = time.StampNano  // "Jan _2 15:04:05.000000000"
+)
 
-	loc *time.Location
-}
-
-var xt = &xTime{
-	c:   &localClient{},
-	loc: Local,
-}
-
-func Conf(opt ...Option) {
-	var opts Options
-	for _, o := range opt {
-		o(&opts)
-	}
-
-	xt.opts = &opts
-	xt.c = newRemoteClient(xt.opts, RemoteServerAddr)
-}
-
-func (x *xTime) getOff() time.Duration {
-	x.mtx.RLock()
-	defer x.mtx.RUnlock()
-	return x.off
-}
-
-func Now() time.Time { return xt.Now() }
-func (x *xTime) Now() time.Time {
-	n := time.Now()
-	if off := x.getOff(); off != 0 {
-		n = n.Add(off)
-	}
-	return n
-}
-
-func Since(tm time.Time) time.Duration { return xt.Since(tm) }
-func (x *xTime) Since(tm time.Time) time.Duration {
-	return x.Now().Sub(tm)
-}
-
-func Location() *time.Location { return xt.Location() }
-func (x *xTime) Location() *time.Location {
-	x.mtx.RLock()
-	defer x.mtx.RUnlock()
-	return x.loc
-}
-
-func Pass(du time.Duration) { xt.Pass(du) }
-func (x *xTime) Pass(du time.Duration) {
-	off := x.c.Off(du)
-
-	x.mtx.Lock()
-	x.off = off
-	x.mtx.Unlock()
-}
-
-func Set(tm time.Time) { xt.Set(tm) }
-func (x *xTime) Set(tm time.Time) {
-	x.Pass(tm.Sub(x.Now()))
-}
-
-func Date(year int, month time.Month, day, hour, min, sec, nsec int, loc *time.Location) time.Time {
-	return xt.Date(year, month, day, hour, min, sec, nsec, loc)
-}
-func (x *xTime) Date(year int, month time.Month, day, hour, min, sec, nsec int, loc *time.Location) time.Time {
-	tm := time.Date(year, month, day, hour, min, sec, nsec, loc)
-	return tm.In(x.Location()).Add(x.getOff())
-}
-
-func NewTicker(d time.Duration) *time.Ticker {
-	panic("unimplement")
-}
-
-func Parse(layout, value string) (time.Time, error) {
-	return ParseInLocation(layout, value, Location())
-}
-
-func ParseInLocation(layout, value string, loc *time.Location) (time.Time, error) {
-	return time.ParseInLocation(layout, value, loc)
-}
-
-func Unix(sec int64, nsec int64) time.Time {
-	return time.Unix(sec, nsec)
-}
+const (
+	Nanosecond  = time.Nanosecond
+	Microsecond = time.Microsecond
+	Millisecond = time.Millisecond
+	Second      = time.Second
+	Minute      = time.Minute
+	Hour        = time.Hour
+)
