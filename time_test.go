@@ -10,8 +10,7 @@ import (
 
 func TestXtime(t *testing.T) {
 	Convey("TestXtime", t, func() {
-		err := time.Conf()
-		So(err, ShouldBeNil)
+		time.Conf()
 
 		n := time.Now()
 		n3 := time.Now()
@@ -20,7 +19,7 @@ func TestXtime(t *testing.T) {
 		fmt.Println(n, n2, n3)
 		So(n2.Sub(n), ShouldAlmostEqual, time.Hour, time.Second)
 
-		time.SetLocation(time.UTC.String())
+		time.In(time.UTC)
 		So(time.GetLocation(), ShouldEqual, time.UTC)
 	})
 }
