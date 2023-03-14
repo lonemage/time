@@ -15,7 +15,12 @@ var (
 	Date            = time.Date
 	ParseInLocation = time.ParseInLocation
 	Unix            = time.Unix
+	Sleep           = time.Sleep
+	Parse           = func(layout, value string) (Time, error) { return ParseInLocation(layout, value, GetLocation()) }
+	Since           = func(tm Time) Duration { return Now().Sub(tm) }
+)
 
+var (
 	Local = time.Local
 	UTC   = time.UTC
 )
