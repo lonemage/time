@@ -91,12 +91,13 @@ var (
 	NewTimer  = time.NewTimer
 	NewTicker = time.NewTicker
 	Tick      = time.Tick
-	Afer      = time.After
+	After     = time.After
 )
 
 var (
 	Parse = func(layout, value string) (Time, error) { return ParseInLocation(layout, value, LocalLocation()) }
 	Since = func(tm Time) Duration { return Now().Sub(tm) }
+	Until = func(tm Time) Duration { return tm.Sub(Now()) }
 	Pass  = func(d Duration) error { return Set(Now().Add(d)) }
 )
 
